@@ -22,6 +22,8 @@ import com.victor.loading.rotate.RotateLoading;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+
+/*笑话列表*/
 public class JokeFragment extends BaseFragment implements LoadResultCallBack {
 
     @InjectView(R.id.recycler_view)
@@ -39,13 +41,13 @@ public class JokeFragment extends BaseFragment implements LoadResultCallBack {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);   //允许fragment 使用菜单
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_auto_load, container, false);
+        View view = inflater.inflate(R.layout.fragment_auto_load, container, false); //复用的布局
         ButterKnife.inject(this, view);
         return view;
     }
@@ -54,8 +56,10 @@ public class JokeFragment extends BaseFragment implements LoadResultCallBack {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setHasFixedSize(false); //每个item的高度不固定
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //上啦  加载更多
         mRecyclerView.setLoadMoreListener(new LoadMoreListener() {
             @Override
             public void loadMore() {
@@ -74,10 +78,11 @@ public class JokeFragment extends BaseFragment implements LoadResultCallBack {
             }
         });
 
+        //接口的使用
         mAdapter = new JokeAdapter(getActivity(), mRecyclerView, this);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.loadFirst();
-        loading.start();
+        mAdapter.loadFirst();//第一次加载  （没有使用刷新的控件，只是用了动画）
+        loading.start();//启动动画
     }
 
     @Override

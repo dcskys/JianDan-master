@@ -1,5 +1,7 @@
 package com.socks.jiandan.base;
 
+
+/*保存所有常量的接口*/
 public interface ConstantString {
 
     String COMMENT_FAILED = "神秘力量导致评论失败 ⊙︿⊙";

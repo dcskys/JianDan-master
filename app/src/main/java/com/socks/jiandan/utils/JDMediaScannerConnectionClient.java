@@ -43,7 +43,7 @@ public class JDMediaScannerConnectionClient implements MediaScannerConnection
     public void onScanCompleted(String path, Uri uri) {
         Looper.prepare();//Looper封装消息队列的一个类 原因是非主线程中默认没有创建Looper对象，需要先调用Looper.prepare()启用Looper。
 
-        if (isSmallPic) {
+        if (isSmallPic) {  //判断
             ShowToast.Short(ConstantString.SAVE_SMALL_SUCCESS + " \n相册" + File.separator + CacheUtil
                     .FILE_SAVE + File.separator + newFile.getName());
         } else {

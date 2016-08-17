@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+/*
+* 新鲜事的详情界面*/
+
 public class FreshNewsDetailActivity extends BaseActivity {
 
     @InjectView(R.id.vp)
@@ -38,29 +41,35 @@ public class FreshNewsDetailActivity extends BaseActivity {
     protected void initView() {
         ButterKnife.inject(this);
         mToolbar.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_actionbar_back);
+        setSupportActionBar(mToolbar);  //设置toolbar 的颜色
+        mToolbar.setNavigationIcon(R.drawable.ic_actionbar_back); //设置返回按钮
     }
 
     @Override
     protected void initData() {
+
+
+        //获取传递过来的实体列表
         ArrayList<FreshNews> FreshNews = (ArrayList<FreshNews>) getIntent().getSerializableExtra
                 (DATA_FRESH_NEWS);
+        //获取传递过来的位置
         int position = getIntent().getIntExtra(DATA_POSITION, 0);
+
         viewPager.setAdapter(new FreshNewsDetailAdapter(getSupportFragmentManager(), FreshNews));
-        viewPager.setCurrentItem(position);
+        viewPager.setCurrentItem(position); //呈现的位置
     }
 
 
     private class FreshNewsDetailAdapter extends FragmentPagerAdapter {
 
-        private ArrayList<FreshNews> freshNewses;
+        private ArrayList<FreshNews> freshNewses; //实体类的集合
 
         public FreshNewsDetailAdapter(FragmentManager fm, ArrayList<FreshNews> freshNewses) {
             super(fm);
             this.freshNewses = freshNewses;
         }
 
+         //返回一个fragment
         @Override
         public Fragment getItem(int position) {
             return FreshNewsDetailFragment.getInstance(freshNewses.get(position));

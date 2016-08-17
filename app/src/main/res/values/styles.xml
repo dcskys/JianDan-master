@@ -19,20 +19,21 @@
     <style name="AppTheme" parent="AppTheme.Base">
         <!--actionbar的样式-->
         <item name="actionBarStyle">@style/JDActionBarStyle</item>
-        <!--标题动画-->
+
+        <!--标题动画  侧滑界面 导航栏-->
         <item name="drawerArrowStyle">@style/AppTheme.JDDrawerArrowStyle</item>
-        <!--actionbar text color 文字颜色-->
+        <!--text color 文字颜色-->
         <item name="android:textColorPrimary">@color/primary_text</item>
     </style>
 
 
     <!-- 设置标题栏样式 -->
     <style name="JDActionBarStyle" parent="Widget.AppCompat.Light.ActionBar">
-        <!--标题栏文字-->
+        <!--标题栏文字样式-->
         <item name="titleTextStyle">@style/ActionBarTitleStyle</item>
     </style>
 
-    <!-- 标题栏文字样式 -->
+    <!-- 标题栏文字 大小  颜色 -->
     <style name="ActionBarTitleStyle" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/actionbar_title</item>
@@ -44,8 +45,6 @@
         <item name="spinBars">false</item>
         <item name="color">@android:color/white</item>
     </style>
-
-
 
 
 

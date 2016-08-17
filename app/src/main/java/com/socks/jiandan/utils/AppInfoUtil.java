@@ -6,6 +6,10 @@ import android.content.pm.PackageManager;
 
 public class AppInfoUtil {
 
+    /**获取当前应用的版本信息
+     * @param activity
+     * @return
+     */
     public static String getVersionName(Activity activity) {
         // 获取packagemanager的实例
         PackageManager packageManager = activity.getPackageManager();

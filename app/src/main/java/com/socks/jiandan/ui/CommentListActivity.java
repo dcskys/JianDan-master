@@ -21,14 +21,19 @@ import com.victor.loading.rotate.RotateLoading;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+
+/*评论列表   有空再研究*/
 public class CommentListActivity extends BaseActivity implements LoadResultCallBack {
 
     @InjectView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout mSwipeRefreshLayout; //下拉控件
+
     @InjectView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;  //这里没有使用自定的
+
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
+
     @InjectView(R.id.loading)
     RotateLoading loading;
 
@@ -49,12 +54,16 @@ public class CommentListActivity extends BaseActivity implements LoadResultCallB
     public void initView() {
         ButterKnife.inject(this);
 
+
+        //toolBar
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         mToolbar.setTitle("评论");
         mToolbar.setNavigationIcon(R.drawable.ic_actionbar_back);
 
-        mRecyclerView.setHasFixedSize(false);
+
+
+        mRecyclerView.setHasFixedSize(false); //高度不固定
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -65,7 +74,7 @@ public class CommentListActivity extends BaseActivity implements LoadResultCallB
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (isFromFreshNews) {
+                if (isFromFreshNews) {  //表明来自新鲜事界面
                     mAdapter.loadData4FreshNews();
                 } else {
                     mAdapter.loadData();
@@ -78,9 +87,10 @@ public class CommentListActivity extends BaseActivity implements LoadResultCallB
     public void initData() {
         thread_key = getIntent().getStringExtra(DATA_THREAD_KEY);
         thread_id = getIntent().getStringExtra(DATA_THREAD_ID);
+
         isFromFreshNews = getIntent().getBooleanExtra(DATA_IS_FROM_FRESH_NEWS, false);
 
-        if (isFromFreshNews) {
+        if (isFromFreshNews) {  //新鲜事界面的评论
             mAdapter = new CommentAdapter(this, thread_id, isFromFreshNews, this);
             if (TextUtils.isEmpty(thread_id) || thread_id.equals("0")) {
                 ShowToast.Short(FORBID_COMMENTS);
@@ -126,7 +136,7 @@ public class CommentListActivity extends BaseActivity implements LoadResultCallB
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_edit:
+            case R.id.action_edit: //发表评论
                 Intent intent = new Intent(this, PushCommentActivity.class);
                 intent.putExtra(DATA_THREAD_ID, mAdapter.getThreadId());
                 startActivityForResult(intent, 100);

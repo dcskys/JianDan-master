@@ -113,6 +113,7 @@ public class FreshNewsAdapter extends RecyclerView.Adapter<FreshNewsAdapter.View
 
          //分享点击事件
         if (isLargeMode) {  //大图模式的点击事件
+
             holder.tv_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -120,7 +121,7 @@ public class FreshNewsAdapter extends RecyclerView.Adapter<FreshNewsAdapter.View
                 }
             });
 
-             //cardView 点击事件 ，打开详情
+             //cardView   点击事件 ，打开详情
             holder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -142,7 +143,7 @@ public class FreshNewsAdapter extends RecyclerView.Adapter<FreshNewsAdapter.View
     }
 
 
-    //把当前的实体类 和位置传递给 详细页面
+    //把当前的实体列表 （注意不指是实体）和位置传递给 详细页面
     private void toDetailActivity(int position) {
         Intent intent = new Intent(mActivity, FreshNewsDetailActivity.class);
         intent.putExtra(FreshNewsDetailActivity.DATA_FRESH_NEWS, mFreshNews);

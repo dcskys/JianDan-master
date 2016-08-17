@@ -24,6 +24,8 @@ import com.socks.jiandan.utils.TextUtil;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+
+/*跳转到 呈现的电影界面*/
 public class VideoDetailActivity extends BaseActivity implements View.OnClickListener {
 
     @InjectView(R.id.webview)
@@ -33,11 +35,11 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
     @InjectView(R.id.imgBtn_back)
-    ImageButton imgBtn_back;
+    ImageButton imgBtn_back; //后退
     @InjectView(R.id.imgBtn_forward)
-    ImageButton imgBtn_forward;
+    ImageButton imgBtn_forward;//前进
     @InjectView(R.id.imgBtn_control)
-    ImageButton imgBtn_control;
+    ImageButton imgBtn_control; //刷新
 
     private String url;
 
@@ -56,10 +58,13 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
     public void initView() {
 
         ButterKnife.inject(this);
+
+        //toolbar
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(R.string.loading);
         mToolbar.setNavigationIcon(R.drawable.ic_actionbar_back);
+
 
         imgBtn_back.setOnClickListener(this);
         imgBtn_forward.setOnClickListener(this);
@@ -70,14 +75,13 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                 new WebChromeClient() {
                     @Override
                     public void onProgressChanged(WebView view, int newProgress) {
-
+                        //加载的进度条
                         if (newProgress == 100) {
                             progress.setVisibility(View.GONE);
                         } else {
                             progress.setProgress(newProgress);
                             progress.setVisibility(View.VISIBLE);
                         }
-
                         super.onProgressChanged(view, newProgress);
                     }
                 }
@@ -95,7 +99,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                 super.onPageFinished(view, url);
                 imgBtn_control.setImageResource(R.drawable.ic_action_refresh);
                 isLoadFinish = true;
-                mToolbar.setTitle(view.getTitle());
+                mToolbar.setTitle(view.getTitle()); //呈现标题
             }
         });
 
@@ -121,6 +125,8 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 return true;
             case R.id.action_more:
+
+                 //第三方的对话框
                 new MaterialDialog.Builder(this)
                         .items(R.array.video_more)
                         .backgroundColor(getResources().getColor(JDApplication.COLOR_OF_DIALOG))
@@ -155,21 +161,20 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.imgBtn_back:
                 if (webview.canGoBack()) {
-                    webview.goBack();
+                    webview.goBack();  //后退操作
                 }
                 break;
             case R.id.imgBtn_forward:
                 if (webview.canGoForward()) {
-                    webview.goForward();
+                    webview.goForward();//前进操作
                 }
                 break;
             case R.id.imgBtn_control:
-
-                if (isLoadFinish) {
+                if (isLoadFinish) {  //加载失败时可以进行刷新
                     webview.reload();
                     isLoadFinish = false;
                 } else {
-                    webview.stopLoading();
+                    webview.stopLoading(); //停止加载
                 }
                 break;
         }

@@ -33,7 +33,7 @@ public class BaseFragment extends Fragment implements ConstantString {
         ImageLoadProxy.getImageLoader().clearMemoryCache(); //清除图片缓存
     }
 
-    protected void executeRequest(Request request) {  //添加volley 队列
+    protected void executeRequest(Request request) {  //添加volley 队列  fragment 和acticity 都有，可以写到全局配置中
         RequestManager.addRequest(request, this);
     }
 }

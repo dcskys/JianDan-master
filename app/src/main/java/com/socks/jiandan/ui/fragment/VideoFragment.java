@@ -23,6 +23,8 @@ import com.victor.loading.rotate.RotateLoading;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+
+/*电影界面*/
 public class VideoFragment extends BaseFragment implements LoadResultCallBack {
 
     @InjectView(R.id.recycler_view)
@@ -40,7 +42,7 @@ public class VideoFragment extends BaseFragment implements LoadResultCallBack {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);//允许fragment 使用菜单
     }
 
     @Override
@@ -54,13 +56,16 @@ public class VideoFragment extends BaseFragment implements LoadResultCallBack {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setHasFixedSize(false);//每个item的高度不固定
+        //上啦  加载更多
         mRecyclerView.setLoadMoreListener(new LoadMoreListener() {
             @Override
             public void loadMore() {
                 mAdapter.loadNextPage();
             }
         });
+
+        //下拉刷新  加载第一页
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -71,11 +76,16 @@ public class VideoFragment extends BaseFragment implements LoadResultCallBack {
                 mAdapter.loadFirst();
             }
         });
+
+         //RecyclerView设置为GridView 的布局  ，为2列
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        mAdapter = new VideoAdapter(getActivity(), this, mRecyclerView);
+
+        mAdapter = new VideoAdapter(getActivity(), this, mRecyclerView);//绑定接口，会有接口回调事件
+
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.loadFirst();
-        loading.start();
+
+        mAdapter.loadFirst();//第一次加载  （没有使用刷新的控件，只是用了动画）
+        loading.start();//启动动画
     }
 
     @Override

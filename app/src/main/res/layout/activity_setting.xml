@@ -7,6 +7,7 @@
 
     <include layout="@layout/common_toolbar"></include>
 
+    <!--静态加载的fragment-->
     <fragment
         android:id="@+id/fragment_setting"
         class="com.socks.jiandan.ui.fragment.SettingFragment"

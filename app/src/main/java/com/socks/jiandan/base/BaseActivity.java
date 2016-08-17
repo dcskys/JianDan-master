@@ -59,6 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     // 抽象方法In Activity
     ///////////////////////////////////////////////////////////////////////////
 
+
+    //只能在子类中使用
     protected abstract void initView();
 
     protected abstract void initData();

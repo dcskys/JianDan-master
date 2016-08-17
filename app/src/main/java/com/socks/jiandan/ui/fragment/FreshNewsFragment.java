@@ -86,9 +86,10 @@ public class FreshNewsFragment extends BaseFragment implements LoadResultCallBac
             public void onRefresh() {
                 mAdapter.loadFirst();
             }
-        });
+    });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         mRecyclerView.setOnPauseListenerParams(false, true);//设置图片时，快速滑动时，暂停图片加载
 
 
@@ -103,6 +104,8 @@ public class FreshNewsFragment extends BaseFragment implements LoadResultCallBac
         mAdapter.loadFirst(); //第一次加载  （没有使用刷新的状态，只是用了动画）
         loading.start(); //启动动画（本来就没数据呈现白色，当获取数据成功，动画结束，数据的进入方式有动画从下往上）
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

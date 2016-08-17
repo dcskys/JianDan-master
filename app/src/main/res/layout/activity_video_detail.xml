@@ -9,7 +9,9 @@
         layout="@layout/common_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"></include>
+        android:layout_alignParentTop="true">
+
+    </include>
 
     <RelativeLayout
         android:layout_width="match_parent"

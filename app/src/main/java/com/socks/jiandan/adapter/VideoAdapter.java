@@ -42,6 +42,8 @@ import com.socks.jiandan.view.imageloader.ImageLoadProxy;
 
 import java.util.ArrayList;
 
+
+/*电影界面的适配器*/
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
 
     private int page;
@@ -58,6 +60,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         mVideos = new ArrayList<>();
     }
 
+    //View视图（每一个item） 滑动时出现的动画效果  (包括看上去 fragment从下面出来的效果也是这个)
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
@@ -66,10 +69,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             lastPosition = position;
         }
     }
-
+    /*
+        * 即列表项view）被窗口分离（即滑动离开了当前窗口界面）就会被调用）  */
     @Override
     public void onViewDetachedFromWindow(VideoViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
+          /*因为item 加入动画时，快速滑动会出现卡顿 现象，需要调用次方法来清除动画 */
         holder.card.clearAnimation();
     }
 
@@ -87,6 +92,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.tv_title.setText(video.getTitle());
         holder.tv_comment_count.setText(video.getComment_count());
 
+         //图片加载
         ImageLoadProxy.displayImageWithLoadingPicture(video.getImgUrl(), holder.img, R.drawable.ic_loading_small);
 
         //用于恢复默认的文字
@@ -143,6 +149,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             }
         });
 
+         //点击打开详情
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +159,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             }
         });
 
-        setAnimation(holder.card, position);
+        setAnimation(holder.card, position); //使用动画
 
     }
 
@@ -209,7 +216,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     }
 
-    //获取评论数量
+    //获取评论数量  ，2次网络访问
     private void getCommentCounts(final ArrayList<Video> videos) {
 
         StringBuilder sb = new StringBuilder();
@@ -235,7 +242,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                     VideoCache.getInstance(mActivity).clearAllCache();
                 }
 
-                mVideos.addAll(videos);
+                mVideos.addAll(videos); //添加数据到集合
                 notifyDataSetChanged();
                 VideoCache.getInstance(mActivity).addResultCache(JSONParser.toString
                         (videos), page);

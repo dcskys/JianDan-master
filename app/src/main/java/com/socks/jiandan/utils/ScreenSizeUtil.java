@@ -3,7 +3,7 @@ package com.socks.jiandan.utils;
 import android.app.Activity;
 
 /**
- * Created by zhaokaiqiang on 15/4/9.
+ * 获取屏幕的宽高
  */
 public class ScreenSizeUtil {
 

@@ -18,13 +18,18 @@ import com.socks.jiandan.utils.ShowToast;
 import java.io.File;
 import java.text.DecimalFormat;
 
+
+/**
+ * 设置界面
+ * PreferenceFragment  可以记住选项的fragment 为SharedPreferences，
+ */
 public class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
     public static final String CLEAR_CACHE = "clear_cache";
     public static final String ABOUT_APP = "about_app";
     public static final String APP_VERSION = "app_version";
     public static final String ENABLE_SISTER = "enable_sister";
-    public static final String ENABLE_FRESH_BIG = "enable_fresh_big";
+    public static final String ENABLE_FRESH_BIG = "enable_fresh_big"; //大图模式
 
     private Preference clearCache;
     private Preference aboutApp;
@@ -35,20 +40,27 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         addPreferencesFromResource(R.xml.preferences);
 
         clearCache = findPreference(CLEAR_CACHE);
         aboutApp = findPreference(ABOUT_APP);
         appVersion = findPreference(APP_VERSION);
+
         enableSister = (CheckBoxPreference) findPreference(ENABLE_SISTER);
         enableBig = (CheckBoxPreference) findPreference(ENABLE_FRESH_BIG);
 
-        appVersion.setTitle(AppInfoUtil.getVersionName(getActivity()));
 
+        appVersion.setTitle(AppInfoUtil.getVersionName(getActivity())); //版本
+
+         //缓存的文件夹
         File cacheFile = ImageLoader.getInstance().getDiskCache().getDirectory();
+          //，用于格式化十进制数字
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        //计算缓存文件的大小
         clearCache.setSummary("缓存大小：" + decimalFormat.format(FileUtil.getDirSize(cacheFile)) + "M");
 
+        //妹子图单选
         enableSister.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -57,6 +69,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             }
         });
 
+        //新鲜事的大图模式
         enableBig.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -69,16 +82,19 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         aboutApp.setOnPreferenceClickListener(this);
     }
 
+
+
+    /*点击事件*/
     @Override
     public boolean onPreferenceClick(Preference preference) {
 
         String key = preference.getKey();
 
-        if (key.equals(CLEAR_CACHE)) {
+        if (key.equals(CLEAR_CACHE)) {     //如果是清空缓存的话
             ImageLoader.getInstance().clearDiskCache();
             ShowToast.Short("清除缓存成功");
             clearCache.setSummary("缓存大小：0.00M");
-        } else if (key.equals(ABOUT_APP)) {
+        } else if (key.equals(ABOUT_APP)) {  //关于作者
 
             MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                     .title("煎蛋开源版")

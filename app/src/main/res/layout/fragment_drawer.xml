@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-<!--底部设置-->
+
+
+    <!--底部设置-->
     <LinearLayout
         android:id="@+id/other"
         android:layout_width="match_parent"
@@ -51,5 +53,7 @@
         android:layout_height="2dp"
         android:layout_above="@id/other"
         android:background="@drawable/widget_bottom_shadow"/>
+
+
 
 </RelativeLayout>

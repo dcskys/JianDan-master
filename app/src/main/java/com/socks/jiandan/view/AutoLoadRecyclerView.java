@@ -16,7 +16,12 @@ import com.socks.jiandan.view.imageloader.ImageLoadProxy;
  */
 public class AutoLoadRecyclerView extends RecyclerView implements LoadFinishCallBack {
 
-    private LoadMoreListener loadMoreListener; //接口只有一个加载更多
+    private LoadMoreListener loadMoreListener; //接口 加载更多
+    public void setLoadMoreListener(LoadMoreListener loadMoreListener) {
+        this.loadMoreListener = loadMoreListener;
+    }
+
+
     private boolean isLoadingMore;
 
     public AutoLoadRecyclerView(Context context) {
@@ -27,26 +32,29 @@ public class AutoLoadRecyclerView extends RecyclerView implements LoadFinishCall
         this(context, attrs, 0);
     }
 
+
+    /*添加布局时就会被调用，用于初始化*/
     public AutoLoadRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         isLoadingMore = false;////用来标记是否向最后一个滑动
-        addOnScrollListener(new AutoLoadScrollListener(null, true, true));//添加监听
+
+         //添加一个监听器，将通知任何更改滚动状态或位置
+        addOnScrollListener(new AutoLoadScrollListener(null, true, true));//添加监听，系统自带
     }
 
 
     /**
-     * 如果需要显示图片，需要设置这几个参数，快速滑动时，暂停图片加载
+     * 如果需要显示图片，需要设置这几个参数，快速滑动时，暂停图片加载  ，
+     * 实例化图片框架
      *
-     * @param pauseOnScroll
-     * @param pauseOnFling
+     * @param pauseOnScroll   true 时  拖动暂停  false   恢复 （手在屏幕上）
+     * @param pauseOnFling      处于滑动状态，（手已经离开屏幕）
      */
-    public void setOnPauseListenerParams(boolean pauseOnScroll, boolean pauseOnFling) {
+    public void setOnPauseListenerParams(boolean pauseOnScroll, boolean  pauseOnFling) {
         addOnScrollListener(new AutoLoadScrollListener(ImageLoadProxy.getImageLoader(), pauseOnScroll, pauseOnFling));
     }
 
-    public void setLoadMoreListener(LoadMoreListener loadMoreListener) {
-        this.loadMoreListener = loadMoreListener;
-    }
+
 
 
      //当调用接口时，这个方法会得到调用
@@ -91,7 +99,7 @@ public class AutoLoadRecyclerView extends RecyclerView implements LoadFinishCall
                 if (loadMoreListener != null && !isLoadingMore && lastVisibleItem >= totalItemCount -
                         2 && dy > 0) {
                     loadMoreListener.loadMore(); //抽象方法 当实现接口时得到调用（具体实现为加载下一页）
-                    isLoadingMore = true;
+                    isLoadingMore = true; //表示正在刷新中
                 }
             }
         }
@@ -107,14 +115,14 @@ public class AutoLoadRecyclerView extends RecyclerView implements LoadFinishCall
                     case SCROLL_STATE_IDLE: //表示滚动结束
                         imageLoader.resume();
                         break;
-                    case SCROLL_STATE_DRAGGING: //正在拖动执行
+                    case SCROLL_STATE_DRAGGING: //正在拖动执行（手指在屏幕上）
                         if (pauseOnScroll) { //true 时暂停
                             imageLoader.pause();
                         } else {
                             imageLoader.resume();
                         }
                         break;
-                    case SCROLL_STATE_SETTLING: //正在沉降相当于松手后
+                    case SCROLL_STATE_SETTLING: //松手后处于滑动状态，（手已经离开屏幕）
                         if (pauseOnFling) {  // true 暂停
                             imageLoader.pause();
                         } else {

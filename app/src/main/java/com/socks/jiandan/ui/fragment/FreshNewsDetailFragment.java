@@ -25,6 +25,8 @@ import com.victor.loading.rotate.RotateLoading;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+
+/*   详情页的fragment ,根据列表数量生成*/
 public class FreshNewsDetailFragment extends BaseFragment {
 
     @InjectView(R.id.webView)
@@ -37,11 +39,12 @@ public class FreshNewsDetailFragment extends BaseFragment {
     public FreshNewsDetailFragment() {
     }
 
+    //在viewPager 中调用  ，返回一个fragment
     public static FreshNewsDetailFragment getInstance(FreshNews freshNews) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(DATA_FRESH_NEWS, freshNews);
         FreshNewsDetailFragment fragment = new FreshNewsDetailFragment();
-        fragment.setArguments(bundle);
+        fragment.setArguments(bundle); //向fragmnt传递参数
         return fragment;
     }
 
@@ -56,22 +59,19 @@ public class FreshNewsDetailFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setHasOptionsMenu(true);
-        freshNews = (FreshNews) getArguments().getSerializable(DATA_FRESH_NEWS);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                if (newProgress > 80) {
-                    loading.stop();
-                }
-            }
-        });
+        setHasOptionsMenu(true);//让fragment 使用菜单选项。。这个必须为true,
+
+        freshNews = (FreshNews) getArguments().getSerializable(DATA_FRESH_NEWS); //获取数据
+
+        //网络请求的数据  GET
         executeRequest(new Request4FreshNewsDetail(FreshNews.getUrlFreshNewsDetail(freshNews.getId()),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
+                        System.out.println("新鲜事返回的类型"+  response);
+
+                        //网页加载
                         webView.loadDataWithBaseURL("", getHtml(freshNews, response), "text/html", "utf-8", "");
                     }
                 }, new
@@ -83,6 +83,19 @@ public class FreshNewsDetailFragment extends BaseFragment {
                 }));
         loading.start();
 
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (newProgress > 80) {  //当加载到80 时停止动画
+                    loading.stop();
+                }
+            }
+        });
+
+
+        //10秒后动画还在加载 就自动停止
         loading.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -91,9 +104,15 @@ public class FreshNewsDetailFragment extends BaseFragment {
                 }
             }
         }, 10 * 1000);
-
     }
 
+
+    /**
+     * 给返回的数据加上个  自定义的标题
+     * @param freshNews
+     * @param content
+     * @return
+     */
     private static String getHtml(FreshNews freshNews, String content) {
         final StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html>");
@@ -153,17 +172,18 @@ public class FreshNewsDetailFragment extends BaseFragment {
         inflater.inflate(R.menu.menu_fresh_news_detail, menu);
     }
 
+     /*菜单操作   更改toolbar 的内容*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_comment:
+            case R.id.action_comment:  //评论界面
                 Intent intent = new Intent(getActivity(), CommentListActivity.class);
                 intent.putExtra(DATA_THREAD_ID, freshNews.getId());
                 intent.putExtra(DATA_IS_FROM_FRESH_NEWS, true);
                 startActivity(intent);
                 return true;
-            case R.id.action_share:
+            case R.id.action_share: //分享
                 ShareUtil.shareText(getActivity(), freshNews.getTitle() + " " + freshNews.getUrl());
                 return true;
         }

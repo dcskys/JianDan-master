@@ -37,6 +37,8 @@ import com.socks.jiandan.utils.TextUtil;
 
 import java.util.ArrayList;
 
+
+/*笑话列表的适配器*/
 public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeViewHolder> {
 
     private int page;
@@ -52,7 +54,7 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeViewHolder
         mLoadResultCallBack = loadResultCallBack;
         mJokes = new ArrayList<>();
     }
-
+    //View视图（每一个item） 滑动时出现的动画效果  (包括看上去 fragment从下面出来的效果也是这个)
     protected void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
@@ -61,7 +63,8 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeViewHolder
             lastPosition = position;
         }
     }
-
+    /*
+       * 即列表项view）被窗口分离（即滑动离开了当前窗口界面）就会被调用）  */
     @Override
     public void onViewDetachedFromWindow(JokeViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
@@ -114,6 +117,8 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeViewHolder
             }
         });
 
+
+        /*评论列表*/
         holder.ll_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +128,7 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeViewHolder
             }
         });
 
-        setAnimation(holder.card, position);
+        setAnimation(holder.card, position); //动画效果
 
     }
 
@@ -170,6 +175,7 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeViewHolder
         }), mActivity);
     }
 
+    //读取缓存
     private void loadCache() {
         mLoadFinisCallBack.loadFinish(null);
         mLoadResultCallBack.onSuccess(LoadResultCallBack.SUCCESS_OK, null);
@@ -182,6 +188,8 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeViewHolder
         notifyDataSetChanged();
     }
 
+
+    /*解析返回的结果*/
     private void getCommentCounts(final ArrayList<Joke> jokes) {
 
         StringBuilder sb = new StringBuilder();

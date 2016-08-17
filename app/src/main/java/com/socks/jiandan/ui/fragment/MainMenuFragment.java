@@ -152,6 +152,10 @@ public class MainMenuFragment extends BaseFragment {
         }
     }
 
+
+    /**
+     * 判断 是否显示 隐藏的妹子图
+     */
     @Override
     public void onResume() {
         super.onResume();

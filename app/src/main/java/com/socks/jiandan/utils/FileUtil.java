@@ -51,6 +51,7 @@ public class FileUtil {
 
         boolean isSmallPic = false;
         String[] urls = picUrl.split("\\.");
+        //获取缓存
         File cacheFile = ImageLoader.getInstance().getDiskCache().get(picUrl);
 
         //如果是GIF格式，优先保存GIF动态图，如果不存在，则保存缩略图
@@ -61,18 +62,19 @@ public class FileUtil {
             isSmallPic = true;
         }
 
-        File picDir = new File(CacheUtil.getSaveDirPath());
+        File picDir = new File(CacheUtil.getSaveDirPath()); //文件路径
 
         if (!picDir.exists()) {
-            picDir.mkdir();
+            picDir.mkdir(); //创建文件夹
         }
 
+        //  文件       要保存的文件夹， 新的文件名
         final File newFile = new File(picDir, CacheUtil.getSavePicName(cacheFile, urls));
 
-        if (FileUtil.copyTo(cacheFile, newFile)) {
+        if (FileUtil.copyTo(cacheFile, newFile)) {  //ImageLoader 中的缓存 保存到 新的文件中
             Bundle bundle = new Bundle();
-            bundle.putBoolean(BaseActivity.DATA_IS_SIAMLL_PIC, isSmallPic);
-            bundle.putString(BaseActivity.DATA_FILE_PATH, newFile.getAbsolutePath());
+            bundle.putBoolean(BaseActivity.DATA_IS_SIAMLL_PIC, isSmallPic); //是否是小图的路径
+            bundle.putString(BaseActivity.DATA_FILE_PATH, newFile.getAbsolutePath());//复制的新文件的全路径
             loadFinishCallBack.loadFinish(bundle);
         } else {
             ShowToast.Short(ConstantString.SAVE_FAILED);

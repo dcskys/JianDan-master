@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--自定义适应高度的RecyclerView-->
+        <!--自定义下拉刷新的RecyclerView-->
         <com.socks.jiandan.view.AutoLoadRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
@@ -19,7 +19,7 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-     <!--动画布局 ，未加载内容之前使用-->
+     <!--动画布局 ，内容未加载之前使用   自定义的view-->
     <include layout="@layout/common_loading"></include>
 
 </FrameLayout>

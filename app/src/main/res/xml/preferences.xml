@@ -13,6 +13,7 @@
             android:key="enable_sister"
             android:title="开启妹子图" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="其他设置">
         <Preference
             android:key="about_app"

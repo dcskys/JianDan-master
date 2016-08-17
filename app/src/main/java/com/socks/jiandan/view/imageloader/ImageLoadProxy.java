@@ -45,6 +45,7 @@ public class ImageLoadProxy {
         build.diskCacheSize(MAX_DISK_CACHE);//50 Mb sd卡(本地)缓存的最大值
         build.memoryCacheSize(MAX_MEMORY_CACHE);// 内存缓存的最大值
         build.memoryCache(new LruMemoryCache(MAX_MEMORY_CACHE));//可以通过自己的内存缓存实现
+         //build.defaultDisplayImageOptions() //自定义图片缓存路径
 
         if (BuildConfig.DEBUG && isShowLog) {
             build.writeDebugLogs();
@@ -114,7 +115,9 @@ public class ImageLoadProxy {
     }
 
     /**
-     * 当使用WebView加载大图的时候，使用本方法现下载到本地然后再加载
+     * 使用本方法现下载到本地然后再加载\
+     *
+     *返回
      *
      * @param url
      * @param loadingListener

@@ -30,6 +30,7 @@ public class Picture implements Serializable {
     * */
 
     private String[] pics;
+
     //评论数量，需要单独获取
     private String comment_counts;
 

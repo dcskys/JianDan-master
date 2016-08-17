@@ -56,8 +56,8 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
     private int page;
     private int lastPosition = -1;
     private ArrayList<Picture> pictures;
-    private LoadFinishCallBack mLoadFinisCallBack;
-    private LoadResultCallBack mLoadResultCallBack;
+    private LoadFinishCallBack mLoadFinisCallBack;    //加载完成
+    private LoadResultCallBack mLoadResultCallBack; //接口 ，成功和失败的方法
     private Activity mActivity;
     private boolean isWifiConnected;
     private Picture.PictureType mType;
@@ -65,7 +65,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
 
     public PictureAdapter(Activity activity, LoadResultCallBack loadResultCallBack, LoadFinishCallBack loadFinisCallBack, Picture.PictureType type) {
         mActivity = activity;
-        mType = type;
+        mType = type;  //公用布局，用来判断该请求哪个地址
         mLoadFinisCallBack = loadFinisCallBack;
         mLoadResultCallBack = loadResultCallBack;
         pictures = new ArrayList<>();
@@ -90,12 +90,14 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
         holder.card.clearAnimation();
     }
 
+
     @Override
     public PictureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_pic, parent, false);
         return new PictureViewHolder(v);
     }
+
 
     @Override
     public void onBindViewHolder(final PictureViewHolder holder, final int position) {
@@ -131,7 +133,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
                                 holder.progress.setVisibility(View.GONE); //加载完成隐藏进度条
                             }
                         },
-                new ImageLoadingProgressListener() {  //加载过程中的监听
+                new ImageLoadingProgressListener() {  //加载过程中的监听 ,进度条滚动
                     @Override
                     public void onProgressUpdate(String imageUri, View view, int current, int total) {
                         holder.progress.setProgress((int) (current * 100f / total)); //加载中进度条的变化
@@ -146,9 +148,13 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
             holder.tv_content.setText(picture.getText_content().trim());
         }
 
+
+
+         //大图点击事件
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {  //图片打开详情
+
                 Intent intent = new Intent(mActivity, ImageDetailActivity.class); //图片详情页
                 intent.putExtra(BaseActivity.DATA_IMAGE_AUTHOR, picture.getComment_author());
                 intent.putExtra(BaseActivity.DATA_IMAGE_URL, picture.getPics());
@@ -163,9 +169,8 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
             }
         });
 
-
         holder.tv_author.setText(picture.getComment_author());
-        holder.tv_time.setText(String2TimeUtil.dateString2GoodExperienceFormat(picture.getComment_date()));
+        holder.tv_time.setText(String2TimeUtil.dateString2GoodExperienceFormat(picture.getComment_date()));//时间处理
         holder.tv_like.setText(picture.getVote_positive());
         holder.tv_comment_count.setText(picture.getComment_counts());
 
@@ -185,7 +190,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
 
         holder.img_share.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {  //分享按钮
                 new MaterialDialog.Builder(mActivity)
                         .items(R.array.picture_dialog)
                         .backgroundColor(mActivity.getResources().getColor(JDApplication.COLOR_OF_DIALOG))
@@ -200,10 +205,11 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
                                         ShareUtil.sharePicture(mActivity, picture
                                                 .getPics()[0]);
                                         break;
-                                    //保存
+                                    //保存图片
                                     case 1:
                                         FileUtil.savePicture(mActivity, picture
                                                 .getPics()[0],mSaveFileCallBack);
+                                                //回调到对应的PictureFragment，进行保存图片的操作
                                         break;
                                 }
                             }
@@ -214,14 +220,14 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
 
         holder.ll_comment.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {  //打开评论列表
                 Intent intent = new Intent(mActivity, CommentListActivity.class);
                 intent.putExtra(BaseActivity.DATA_THREAD_KEY, "comment-" + picture.getComment_ID());
                 mActivity.startActivity(intent);
             }
         });
 
-        setAnimation(holder.card, position);
+        setAnimation(holder.card, position); //滚动动画
 
     }
 
@@ -240,6 +246,8 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
         loadDataByNetworkType();
     }
 
+
+
     private void loadDataByNetworkType() {
 
         if (NetWorkUtil.isNetWorkConnected(mActivity)) {
@@ -250,14 +258,14 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
 
     }
 
-    private void loadData() {
+    private void loadData() {  //读取网络
 
         RequestManager.addRequest(new Request4Picture(Picture.getRequestUrl(mType, page),
                 new Response.Listener<ArrayList<Picture>>
                         () {
                     @Override
                     public void onResponse(ArrayList<Picture> response) {
-                        getCommentCounts(response);
+                        getCommentCounts(response); //2次访问
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -265,23 +273,26 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
                 mLoadResultCallBack.onError(LoadResultCallBack.ERROR_NET, error.getMessage());
                 mLoadFinisCallBack.loadFinish(null);
             }
-        }), mActivity);
+        }), mActivity); //mActivity  tag 标签  其实就是context
     }
 
-    private void loadCache() {
+    private void loadCache() { //读取缓存
 
-        mLoadResultCallBack.onSuccess(LoadResultCallBack.SUCCESS_OK, null);
+        mLoadResultCallBack.onSuccess(LoadResultCallBack.SUCCESS_OK, null); //返回调用到主线程
         mLoadFinisCallBack.loadFinish(null);
-        PictureCache pictureCacheUtil = PictureCache.getInstance(mActivity);
+
+        PictureCache pictureCacheUtil = PictureCache.getInstance(mActivity); //数据库
         if (page == 1) {
             pictures.clear();
             ShowToast.Short(ConstantString.LOAD_NO_NETWORK);
         }
-        pictures.addAll(pictureCacheUtil.getCacheByPage(page));
+        pictures.addAll(pictureCacheUtil.getCacheByPage(page)); //添加缓存数据到列表
         notifyDataSetChanged();
 
     }
 
+
+    //处理网络返回结果  ,进行2次访问
     private void getCommentCounts(final ArrayList<Picture> pictures) {
 
         StringBuilder sb = new StringBuilder();
@@ -295,16 +306,19 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureV
             @Override
             public void onResponse(ArrayList<CommentNumber> response) {
 
-                mLoadResultCallBack.onSuccess(LoadResultCallBack.SUCCESS_OK, null);
+                mLoadResultCallBack.onSuccess(LoadResultCallBack.SUCCESS_OK, null); //2次的时候进行回调
                 mLoadFinisCallBack.loadFinish(null);
 
+                //为每一个列表中元素  设置 评论数
                 for (int i = 0; i < pictures.size(); i++) {
                     pictures.get(i).setComment_counts(response.get(i).getComments() + "");
                 }
-                if (page == 1) {
+
+                if (page == 1) {   //刷新第一页数据
                     PictureAdapter.this.pictures.clear();
                     PictureCache.getInstance(mActivity).clearAllCache();
                 }
+
                 PictureAdapter.this.pictures.addAll(pictures);
                 notifyDataSetChanged();
                 //加载完毕后缓存

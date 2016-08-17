@@ -70,6 +70,7 @@ public class MainActivity extends BaseActivity {
             public void onDrawerClosed(View drawerView) {
                 invalidateOptionsMenu();//这个之后才能调用菜单
                 //Android3.0及以上版本默认menu是打开的，所以必须调用invalidateOptionsMenu()方法，然后系统将调用onPrepareOptionsMenu()执行update操作。
+                //想要实现在不同的上下文环境下修改action bar上的菜单项
             }
 
             @Override
